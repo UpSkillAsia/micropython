@@ -245,283 +245,116 @@ class SSD1306_I2C(SSD1306):
         self.write_list[1] = buf
         self.i2c.writevto(self.addr, self.write_list)
 #MOTOR STATE
-LMotor = machine.Pin(27, machine.Pin.OUT)
-LMotor2 = machine.Pin(14, machine.Pin.OUT)
-RMotor = machine.Pin(25, machine.Pin.OUT)
-RMotor2 = machine.Pin(26, machine.Pin.OUT)
 
-pwm1 = machine.PWM(LMotor)
-pwm2 = machine.PWM(RMotor)
-pwm3 = machine.PWM(LMotor2)
-pwm4 = machine.PWM(RMotor2)
-def stop():
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-  
-def forward_forsec(duration, speed):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
 
-def backward_forsec(duration, speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.on()
-  pwm3.duty(speed)
-  RMotor2.on()
-  pwm4.duty(speed)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
+RMOTOR1 = Pin(25, Pin.OUT)
+LMOTOR1 = Pin(27, Pin.OUT)
+RMOTOR2 = Pin(26, Pin.OUT)
+LMOTOR2 = Pin(14, Pin.OUT)
 
-def right_forsec(duration, speed):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def left_forsec(duration, speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
+RMOTOR1_PWM = PWM(Pin(25), freq=50000)
+LMOTOR1_PWM = PWM(Pin(27), freq=50000)
+RMOTOR2_PWM = PWM(Pin(26), freq=50000)
+LMOTOR2_PWM = PWM(Pin(14), freq=50000)
 
 def forward(speed):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
+  RMOTOR1.on()
+  RMOTOR1_PWM.duty(int(speed))
+  LMOTOR1.on()
+  LMOTOR1_PWM.duty(int(speed))
+  RMOTOR2.off()
+  RMOTOR2_PWM.duty(int(0))
+  LMOTOR2.off()
+  LMOTOR2_PWM.duty(int(0))
+
+def stop():
+  RMOTOR1.off()
+  RMOTOR1_PWM.duty(int(0))
+  LMOTOR1.off()
+  LMOTOR1_PWM.duty(int(0))
+  RMOTOR2.off()
+  RMOTOR2_PWM.duty(int(0))
+  LMOTOR2.off()
+  LMOTOR2_PWM.duty(int(0))
+
+def forward_for_sec(speed, duration):
+  RMOTOR1.on()
+  RMOTOR1_PWM.duty(int(speed))
+  LMOTOR1.on()
+  LMOTOR1_PWM.duty(int(speed))
+  RMOTOR2.off()
+  RMOTOR2_PWM.duty(int(0))
+  LMOTOR2.off()
+  LMOTOR2_PWM.duty(int(0))
+  time.sleep(duration)
+  stop()
 
 def backward(speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.on()
-  pwm3.duty(speed)
-  RMotor2.on()
-  pwm4.duty(speed)
+  RMOTOR1.off()
+  RMOTOR1_PWM.duty(int(0))
+  LMOTOR1.off()
+  LMOTOR1_PWM.duty(int(0))
+  RMOTOR2.on()
+  RMOTOR2_PWM.duty(int(speed))
+  LMOTOR2.on()
+  LMOTOR2_PWM.duty(int(speed))
+
+
+def backward_for_sec(speed, duration):
+  RMOTOR1.off()
+  RMOTOR1_PWM.duty(int(0))
+  LMOTOR1.off()
+  LMOTOR1_PWM.duty(int(0))
+  RMOTOR2.on()
+  RMOTOR2_PWM.duty(int(speed))
+  LMOTOR2.on()
+  LMOTOR2_PWM.duty(int(speed))
+  time.sleep(duration)
+  stop()
 
 def left(speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
+  RMOTOR1.on()
+  RMOTOR1_PWM.duty(int(speed))
+  LMOTOR1.off()
+  LMOTOR1_PWM.duty(int(0))
+  RMOTOR2.off()
+  RMOTOR2_PWM.duty(int(0))
+  LMOTOR2.on()
+  LMOTOR2_PWM.duty(int(speed))
+
+def left_for_sec(speed, duration):
+  RMOTOR1.on()
+  RMOTOR1_PWM.duty(int(speed))
+  LMOTOR1.off()
+  LMOTOR1_PWM.duty(int(0))
+  RMOTOR2.off()
+  RMOTOR2_PWM.duty(int(0))
+  LMOTOR2.on()
+  LMOTOR2_PWM.duty(int(speed))
+  time.sleep(duration)
+  stop()
 
 def right(speed):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
+  RMOTOR1.off()
+  RMOTOR1_PWM.duty(int(0))
+  LMOTOR1.on()
+  LMOTOR1_PWM.duty(int(speed))
+  RMOTOR2.on()
+  RMOTOR2_PWM.duty(int(speed))
+  LMOTOR2.off()
+  LMOTOR2_PWM.duty(int(0))
 
-def left_fw(speed):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def right_fw(speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-
-def left_bw(speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.on()
-  pwm3.duty(speed)
-  RMotor2.off()
-  pwm4.duty(0)
-
-
-def right_bw(speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.on()
-  pwm4.duty(speed)
-
-
-def forward_duration(speed, duration):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
+def right_for_sec(speed, duration):
+  RMOTOR1.off()
+  RMOTOR1_PWM.duty(int(0))
+  LMOTOR1.on()
+  LMOTOR1_PWM.duty(int(speed))
+  RMOTOR2.on()
+  RMOTOR2_PWM.duty(int(speed))
+  LMOTOR2.off()
+  LMOTOR2_PWM.duty(int(0))
   time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def backward_duration(speed, duration):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.on()
-  pwm3.duty(speed)
-  RMotor2.on()
-  pwm4.duty(speed)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def right_duration(speed, duration):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def left_duration(speed, duration):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-  time.sleep(duration)
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def motor_right(speed):
-  LMotor.off()
-  pwm1.duty(0)
-  RMotor.on()
-  pwm2.duty(speed)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-
-def motor_left(speed):
-  LMotor.on()
-  pwm1.duty(speed)
-  RMotor.off()
-  pwm2.duty(0)
-  LMotor2.off()
-  pwm3.duty(0)
-  RMotor2.off()
-  pwm4.duty(0)
-# ตัวอย่างการใช้งาน
-#beetlecarmotor = BeetleCarMotor()
-#beetlecarmotor.stop()
+  stop()
 
 #END STATE MOTOR
 scale5 = [523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 , 0]
@@ -537,62 +370,6 @@ mary_little_lamb = [4,2,0,2,4,4,4,13,2,2,2,13,4,7,7,13,4,2,0,2,4,4,4,13,0,2,2,4,
 twinkle_twinkle = [0, 0, 6, 6, 9, 9, 6, 13, 5, 5, 4, 4, 2, 2, 0, 13, 6, 6, 5, 5, 4, 4, 2, 13, 6, 6, 5, 5, 4, 4, 2, 13, 0, 0, 6, 6, 9, 9, 6, 13, 5, 5, 4, 4, 2, 2, 0]
 
 bitsy_spider = [9, 0, 0, 2, 4, 4, 13, 4, 2, 0, 2, 4, 2, 13, 4, 4, 5, 7, 13, 7, 5, 4, 5, 7, 4, 0, 0, 2, 4, 13, 4, 2, 0, 2, 4, 0, 13, 7, 7, 0, 0, 0, 2, 4, 4, 13, 4, 2, 0, 2, 4, 0]
-
-#IR can't use right now
-'''#IR STATE
-
-ird = Pin(19,Pin.IN)
-
-act = {"1": "LLLLLLLLHHHHHHHHLHHLHLLLHLLHLHHH","2": "LLLLLLLLHHHHHHHHHLLHHLLLLHHLLHHH","3": "LLLLLLLLHHHHHHHHHLHHLLLLLHLLHHHH",
-       "4": "LLLLLLLLHHHHHHHHLLHHLLLLHHLLHHHH","5": "LLLLLLLLHHHHHHHHLLLHHLLLHHHLLHHH","6": "LLLLLLLLHHHHHHHHLHHHHLHLHLLLLHLH",
-       "7": "LLLLLLLLHHHHHHHHLLLHLLLLHHHLHHHH","8": "LLLLLLLLHHHHHHHHLLHHHLLLHHLLLHHH","9": "LLLLLLLLHHHHHHHHLHLHHLHLHLHLLHLH",
-       "0": "LLLLLLLLHHHHHHHHLHLLHLHLHLHHLHLH","Up": "LLLLLLLLHHHHHHHHLHHLLLHLHLLHHHLH","Down": "LLLLLLLLHHHHHHHHHLHLHLLLLHLHLHHH",
-       "Left": "LLLLLLLLHHHHHHHHLLHLLLHLHHLHHHLH","Right": "LLLLLLLLHHHHHHHHHHLLLLHLLLHHHHLH","Ok": "LLLLLLLLHHHHHHHHLLLLLLHLHHHHHHLH",
-       "*": "LLLLLLLLHHHHHHHHLHLLLLHLHLHHHHLH","#": "LLLLLLLLHHHHHHHHLHLHLLHLHLHLHHLH"}
-
-def read_ircode(ird):
-    wait = 1
-    complete = 0
-    seq0 = []
-    seq1 = []
-
-    while wait == 1:
-        if ird.value() == 0:
-            wait = 0
-    while wait == 0 and complete == 0:
-        start = utime.ticks_us()
-        while ird.value() == 0:
-            ms1 = utime.ticks_us()
-        diff = utime.ticks_diff(ms1,start)
-        seq0.append(diff)
-        while ird.value() == 1 and complete == 0:
-            ms2 = utime.ticks_us()
-            diff = utime.ticks_diff(ms2,ms1)
-            if diff > 10000:
-                complete = 1
-        seq1.append(diff)
-
-    code = ""
-    for val in seq1:
-        if val < 2000:
-            if val < 700:
-                code += "L"
-            else:
-                code += "H"
-    # print(code)
-    command = ""
-    for k,v in act.items():
-        if code == v:
-            command = k
-    if command == "":
-        command = code
-    return command
-
-command = read_ircode(ird)'''
-
-#OLED STATE
-
-
 
 class SSD1306(framebuf.FrameBuffer):
     def __init__(self, width, height, external_vcc):

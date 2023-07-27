@@ -1,7 +1,7 @@
 from machine import Pin
 from machine import Timer
 from time import sleep_ms
-import ubluetooth
+import bluetooth
 from neopixel import NeoPixel
 
 ble_msg = ""
@@ -16,7 +16,7 @@ class ESP32_BLE():
         self.timer1 = Timer(0)
         
         self.name = name
-        self.ble = ubluetooth.BLE()
+        self.ble = bluetooth.BLE()
         self.ble.active(True)
         self.disconnected()
         self.ble.irq(self.ble_irq)
@@ -59,9 +59,9 @@ class ESP32_BLE():
         RX_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E'
         TX_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E'
             
-        BLE_NUS = ubluetooth.UUID(NUS_UUID)
-        BLE_RX = (ubluetooth.UUID(RX_UUID), ubluetooth.FLAG_WRITE)
-        BLE_TX = (ubluetooth.UUID(TX_UUID), ubluetooth.FLAG_NOTIFY)
+        BLE_NUS = bluetooth.UUID(NUS_UUID)
+        BLE_RX = (bluetooth.UUID(RX_UUID), bluetooth.FLAG_WRITE)
+        BLE_TX = (bluetooth.UUID(TX_UUID), bluetooth.FLAG_NOTIFY)
             
         BLE_UART = (BLE_NUS, (BLE_TX, BLE_RX,))
         SERVICES = (BLE_UART, )
@@ -99,7 +99,7 @@ np = NeoPixel(Pin(NEO_PIN, Pin.OUT), NEO_COUNT)
 
 
 
-ble = ESP32_BLE("ESP32BLE")
+#ble = ESP32_BLE("ESP32BLE")
 
 def buttons_irq(pin):
     led.value(not led.value())
@@ -175,5 +175,3 @@ def blue_connect():
         print('LED is OFF.' )
         ble.send('LED is OFF.')
     sleep_ms(100)'''
-
-
